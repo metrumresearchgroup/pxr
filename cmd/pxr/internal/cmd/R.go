@@ -16,10 +16,16 @@ var RCmd = &cobra.Command{
 }
 
 func rR(cmd *cobra.Command, args []string) error {
-	if err := rcmd.StartR(globalCtx, rcmd.NewRSettings("R"), "", []string{}, *rcmd.NewRunConfig()); err != nil {
+	rs := rcmd.NewRSettings("R")
+	cmdArgs := []string{"--vanilla"}
+	if cfg.AsUser {
+		rs.AsUser = true
+		// don't run vanilla so will act like user session
+		cmdArgs = []string{}
+	}
+	if err := rcmd.StartR(globalCtx, rs, "", cmdArgs, *rcmd.NewRunConfig()); err != nil {
 		panic(err)
 	}
-
 	return nil
 }
 

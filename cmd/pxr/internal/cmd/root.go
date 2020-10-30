@@ -3,7 +3,7 @@ package cmd
 import (
 	"context"
 	"fmt"
-	"github.com/metrumresearchgroup/pxr/internal/logger"
+	"github.com/metrumresearchgroup/pxr/internal/configlib"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -12,10 +12,11 @@ import (
 
 var (
 	build     string
+	cfg       configlib.Config
 	globalCtx context.Context
 	rootCmd   = &cobra.Command{
 		Use:   "pxr",
-		Short: "Process eXecutoR for R",
+		Short: "Process eXecutor for R",
 		Long: `
 interact and execute R processes and do development activities
 	`,
@@ -39,19 +40,19 @@ func Execute(ctx context.Context, build string) error {
 func init() {
 	cobra.OnInitialize(initConfig)
 
-	rootCmd.PersistentFlags().String("loglevel", "", "level for logging")
-	_ = viper.BindPFlag("loglevel", rootCmd.PersistentFlags().Lookup("loglevel"))
-	viper.SetDefault("loglevel", "info")
+	rootCmd.PersistentFlags().String("loglevel", cfg.LogLevel, "level for logging")
+	viper.BindPFlag("loglevel", rootCmd.PersistentFlags().Lookup("loglevel"))
 
-	rootCmd.PersistentFlags().Bool("trace", false, "use debug mode")
-	_ = viper.BindPFlag("trace", rootCmd.PersistentFlags().Lookup("trace"))
+	rootCmd.PersistentFlags().StringSlice("libpaths", []string{}, "path to each libpaths to run the command(s) against")
+	viper.BindPFlag("libpaths", rootCmd.PersistentFlags().Lookup("libpaths"))
 
+	rootCmd.PersistentFlags().String("rpath", cfg.LogLevel, "path to R")
+	viper.BindPFlag("rpath", rootCmd.PersistentFlags().Lookup("rpath"))
+
+	rootCmd.PersistentFlags().Bool("as-user", false, "use debug mode")
+	viper.BindPFlag("asuser", rootCmd.PersistentFlags().Lookup("as-user"))
 }
 
 func initConfig() {
-	logger.SetLogLevel(viper.GetString("loglevel"))
-	if viper.GetBool("trace") {
-		viper.Debug()
-		logger.SetLogLevel("trace")
-	}
+	cfg = configlib.NewConfig(viper.GetString("config"))
 }

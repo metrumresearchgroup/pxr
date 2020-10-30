@@ -3,7 +3,7 @@ module github.com/metrumresearchgroup/pxr
 go 1.14
 
 require (
-	github.com/metrumresearchgroup/rcmd v0.0.0-20200719154459-e27dcdcf5c6e
+	github.com/metrumresearchgroup/rcmd v1.2.0
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/otiai10/copy v1.2.0
 	github.com/pkg/errors v0.8.1

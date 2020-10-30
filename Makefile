@@ -7,11 +7,17 @@ MAKE_HOME=${PWD}
 install:
 	cd cmd/pxr; go install ${LDFLAGS}
 
+build:
+	cd cmd/pxr; go build ${LDFLAGS} -o pxr; ./pxr $(ARGS)
+
 pxr:
-	cd cmd/pxr; go build ${LDFLAGS} -o pxr;
+	cd cmd/pxr; go build ${LDFLAGS} -o ../../pxr;
 
 experiment:
 	cd cmd/pxr; go build ${LDFLAGS} -o pxr; ./pxr experiment; rm ./pxr
 
 cmdtest:
-	cd cmd/pxr; go build ${LDFLAGS} -o pxr; ./pxr test; rm ./pxr
+	cd cmd/pxr; go build ${LDFLAGS} -o pxr; ./pxr test $(ARGS)
+
+cmdcheck:
+	cd cmd/pxr; go build ${LDFLAGS} -o pxr; ./pxr check; rm ./pxr
