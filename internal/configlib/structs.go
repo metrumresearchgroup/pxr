@@ -16,4 +16,5 @@ type Config struct {
 	LogLevel       string                   `mapstructure:"loglevel"`
 	AsUser         bool                     `mapstructure:"asuser" yaml:"as_user"`
 	EnvVars        []string                 `mapstructure:"environment_variables" yaml:"environment_variables"`
+	NoCleanup      bool                     `mapstructure:"nocleanup" yaml:"no_cleanup"`
 }

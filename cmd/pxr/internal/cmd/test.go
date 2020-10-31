@@ -7,6 +7,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"golang.org/x/sync/semaphore"
 	"io/ioutil"
 	"path/filepath"
 )
@@ -22,7 +23,8 @@ var testCmd = &cobra.Command{
 }
 
 func rTest(cmd *cobra.Command, args []string) error {
-	err := run(args, func(path string, rs rcmd.RSettings) {
+	sem := semaphore.NewWeighted(int64(cfg.Threads))
+	err := run(globalCtx, sem, args, func(path string, rs rcmd.RSettings) {
 		baseName := filepath.Base(rs.LibPaths[0])
 		tdir, err := ioutil.TempDir("", fmt.Sprintf("*-test-%s", baseName))
 		if err != nil {
@@ -32,6 +34,13 @@ func rTest(cmd *cobra.Command, args []string) error {
 		if cfg.TestCmd != "" {
 			log.Info(fmt.Sprintf("with command: %s", cfg.TestCmd))
 		}
+
+		cleanup := R.NewDefaultCleanUp()
+		if cfg.NoCleanup {
+			cleanup.OnSuccess = false
+			cleanup.OnFailure = false
+		}
+
 		if err := R.Test(globalCtx,
 			cfg.TestCmd,
 			path,
@@ -39,7 +48,7 @@ func rTest(cmd *cobra.Command, args []string) error {
 			cfg,
 			rs,
 			*rcmd.NewRunConfig(rcmd.WithPrefix(fmt.Sprintf("[%s] ", baseName))),
-			R.NewDefaultCleanUp(),
+			cleanup,
 		); err != nil {
 			log.Error(err)
 		}

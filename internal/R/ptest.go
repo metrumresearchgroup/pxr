@@ -18,6 +18,7 @@ type CleanUp struct {
 	OnSuccess bool
 }
 
+// NewDefaultCleanup sets cleanup on failure to false, and on success to true
 func NewDefaultCleanUp() CleanUp {
 	return CleanUp{
 		OnFailure: false,

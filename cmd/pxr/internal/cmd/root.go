@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/metrumresearchgroup/pxr/internal/configlib"
+	"github.com/metrumresearchgroup/pxr/internal/logger"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -34,6 +35,7 @@ func Execute(ctx context.Context, build string) error {
 		fmt.Println(err)
 		os.Exit(-1)
 	}
+
 	return nil
 }
 
@@ -43,16 +45,23 @@ func init() {
 	rootCmd.PersistentFlags().String("loglevel", cfg.LogLevel, "level for logging")
 	viper.BindPFlag("loglevel", rootCmd.PersistentFlags().Lookup("loglevel"))
 
-	rootCmd.PersistentFlags().StringSlice("libpaths", []string{}, "path to each libpaths to run the command(s) against")
-	viper.BindPFlag("libpaths", rootCmd.PersistentFlags().Lookup("libpaths"))
+	rootCmd.PersistentFlags().StringSlice("libpath", []string{}, "path to each libpaths to run the command(s) against")
+	viper.BindPFlag("libpaths", rootCmd.PersistentFlags().Lookup("libpath"))
+
+	rootCmd.PersistentFlags().StringSlice("env", []string{}, "environment variables to set, given pattern `var=val`")
+	viper.BindPFlag("environment_variables", rootCmd.PersistentFlags().Lookup("env"))
 
 	rootCmd.PersistentFlags().String("rpath", cfg.LogLevel, "path to R")
 	viper.BindPFlag("rpath", rootCmd.PersistentFlags().Lookup("rpath"))
 
 	rootCmd.PersistentFlags().Bool("as-user", false, "use debug mode")
 	viper.BindPFlag("asuser", rootCmd.PersistentFlags().Lookup("as-user"))
+
+	rootCmd.PersistentFlags().Bool("no-cleanup", false, "use debug mode")
+	viper.BindPFlag("nocleanup", rootCmd.PersistentFlags().Lookup("no-cleanup"))
 }
 
 func initConfig() {
 	cfg = configlib.NewConfig(viper.GetString("config"))
+	logger.SetLogLevel(cfg.LogLevel)
 }
