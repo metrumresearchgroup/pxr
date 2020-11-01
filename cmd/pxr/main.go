@@ -52,16 +52,16 @@ func run() error {
 	case sig := <-shutdown:
 		// need to figure out how to shutdown gracefully
 
-		switch {
-		case sig == syscall.SIGSTOP:
-			return errors.New("integrity issue caused shutdown")
-			//case err != nil:
-			//	return errors.Wrap(err, "could not stop server gracefully")
-		default:
-			fmt.Println("calling cancel...")
-			cancel()
-			time.Sleep(2 * time.Second)
-		}
+		//switch {
+		//case sig == syscall.SIGSTOP:
+		//	return errors.New("integrity issue caused shutdown")
+		//case err != nil:
+		//	return errors.Wrap(err, "could not stop server gracefully")
+		//default:
+		fmt.Printf("calling cancel... %s", sig)
+		cancel()
+		time.Sleep(2 * time.Second)
+		//}
 	}
 
 	return nil
