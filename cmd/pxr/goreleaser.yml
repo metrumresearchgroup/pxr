@@ -1,0 +1,30 @@
+# goreleaser.yml
+# Build customization
+project_name: pxr
+
+release:
+  # in case there is an indicator for this in the tag e.g. v1.0.0-rc1
+  # If set to true, will mark the release as not ready for production.
+  # Default is false.
+  prerelease: auto
+
+build:
+  binary: pxr
+  env:
+    - CGO_ENABLED=0
+  ldflags:
+    - -s -w -extldflags "-static" -X 'github.com/metrumresearchgroup/pxr/cmd/main.build={{ .Version }}'
+  goos:
+    - windows
+    - darwin
+    - linux
+  goarch:
+    - amd64
+
+# goreleaser.yml
+brews:
+  # Repository to push the tap to.
+  -
+    github:
+      owner: metrumresearchgroup
+      name: homebrew-tap
