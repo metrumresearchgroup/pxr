@@ -2,7 +2,7 @@ BUILD=`date +%FT%T%z`
 LDFLAGS=-ldflags "-X main.build=${BUILD}"
 MAKE_HOME=${PWD}
 
-.PHONY: install experiment cmdtest pxr
+.PHONY: install experiment cmdtest pxr local-release release
 
 install:
 	cd cmd/pxr; go install ${LDFLAGS}
@@ -12,6 +12,12 @@ build:
 
 pxr:
 	cd cmd/pxr; go build ${LDFLAGS} -o ../../pxr;
+
+local-release:
+	cd cmd/pxr; goreleaser --rm-dist --skip-publish
+
+release:
+	cd cmd/pxr; goreleaser --rm-dist --skip-publish
 
 experiment:
 	cd cmd/pxr; go build ${LDFLAGS} -o pxr; ./pxr experiment; rm ./pxr
