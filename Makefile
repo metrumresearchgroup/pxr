@@ -15,10 +15,10 @@ pxr:
 	cd cmd/pxr; go build ${LDFLAGS} -o ../../pxr;
 
 local-release:
-	cd cmd/pxr; tag=$tag goreleaser --rm-dist --skip-publish
+	cd cmd/pxr; tag=${tag} goreleaser --rm-dist --skip-publish
 
 release:
-	cd cmd/pxr; tag=$tag goreleaser --rm-dist --skip-publish
+	cd cmd/pxr; tag=${tag} goreleaser --rm-dist --skip-publish
 
 experiment:
 	cd cmd/pxr; go build ${LDFLAGS} -o pxr; ./pxr experiment; rm ./pxr
