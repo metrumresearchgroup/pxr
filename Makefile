@@ -18,7 +18,7 @@ local-release:
 	cd cmd/pxr; tag=${tag} goreleaser --rm-dist --skip-publish
 
 release:
-	cd cmd/pxr; tag=${tag} goreleaser --rm-dist --skip-publish
+	cd cmd/pxr; tag=${tag} goreleaser --rm-dist
 
 experiment:
 	cd cmd/pxr; go build ${LDFLAGS} -o pxr; ./pxr experiment; rm ./pxr
